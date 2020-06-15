@@ -1,10 +1,15 @@
 
+<van-notice-bar
+  text="请刷新页面获取最新状态！！！"
+  speed="50"
+  left-icon="warning"
+/>
 <view style="font-family: 'ttf2';" wx:for="{{ arrfloorname }}" wx:for-item="j" wx:key="arrfloorname">
   <van-collapse accordion value="{{ activeNames }}" bind:open="onChange" bind:close="onClose" data-names="{{ floorname[j] }}">
     <van-collapse-item name="{{ j }}">
       <view slot="title">
         {{ floorname[j] }}
-        <van-tag wx:if="{{malfunctionflag == 1}}" round type="danger">有故障窗</van-tag>
+        <van-tag wx:if="{{malfunctionflag[j] == 1}}" round type="danger">有故障窗</van-tag>
       </view>
     <view class="txt" style="font-family: 'ttf';" wx:for="{{ arrmalfunction }}" wx:for-item="i" style="font-size:16px" wx:key="arrnoclosewin">
      {{ malfunction[i] }}

@@ -6,9 +6,12 @@ Page({
     var that = this;
     var id = e.currentTarget.dataset.id || 0;
     var resdata = wx.getStorageSync('resdata');
-    console.log(resdata);
+    //console.log(id);
     for (var i=0;i<resdata.length;i++){
       for (var j=0;j<resdata[i].length;j++){
+          if(resdata[i] == "NULL"){
+            break;
+          }
           if(resdata[i][j] == "1"){
             resdata[i][j] = "窗户"+(j+1)+"未关❌";
           }else if(resdata[i][j] == "0"){
@@ -49,6 +52,8 @@ Page({
     });
   },
   onHide: function(){
+    var that = this;
+    that.setData({ times:null,arrview:null,arrfloor:null });
     wx.removeStorage({
       key: 'arrview',
     });

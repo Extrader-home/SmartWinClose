@@ -8,6 +8,7 @@ Component({
       wx.navigateTo({
         url: event.target.dataset.url
       });
+      this.setData({ nocloseflag:[],malfunctionflag:[] });
     }
   },
   attached: function (){
@@ -27,10 +28,10 @@ Component({
             var noclose = 0,malfunction = 0;
             for (var i=0;i<res1.data['data'].length;i++){
               for (var j=0;j<res1.data['data'][i].length;j++){
-                if(res1.data['data'][i][j] == 1){
+                if(res1.data['data'][i][j] === "1"){
                   noclose = 1;
                 }
-                if(res1.data['data'][i][j] == -1){
+                if(res1.data['data'][i][j] === "-1"){
                   malfunction = 1;
                 }
               }

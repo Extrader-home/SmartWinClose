@@ -20,6 +20,9 @@ Page({
         time.timeFn(arrfloornames,res.data['time']);  
         for (var i=0;i<res.data["data"].length;i++){
           for (var j=0;j<res.data["data"][i].length;j++){
+              if(res.data['data'][i] == "NULL"){
+                break;
+              }
               if(res.data["data"][i][j] == "-1"){
                 res.data["data"][i][j] = (i+1)+"楼 -> "+(j+1)+"窗 -> 故障🚫";
                 malfunction.push(res.data["data"][i][j])
@@ -49,7 +52,7 @@ Page({
   },
   onLoad: function(){
     var that = this;
-    var malfunctionflag = 0;
+    var malfunctionflag = [];
     wx.request({
       url: 'https://wlaport.top/apitest.php?floor=1',
       methods: 'GET',
@@ -66,11 +69,24 @@ Page({
           method: 'GET', // 声明GET请求  
           // header: {}, // 设置请求的 header，GET请求可以不填  
           success: function(res1){  
+            var flag = 0;
             for (var i=0;i<res1.data['data'].length;i++){
               for (var j=0;j<res1.data['data'][i].length;j++){
-                if(res1.data['data'][i][j] == 1){
-                  malfunctionflag = 1;
+                if(res1.data['data'][i] === "NULL"){
+                  break;
                 }
+                if(res1.data['data'][i][j] === "-1"){
+                  flag = 1;
+                  break;
+                }
+              }
+              if(flag === 1){
+                malfunctionflag.push(1);
+                break;
+              }
+              if(i == res1.data['data'].length-1 && flag === 0){
+                malfunctionflag.push(0);
+                break;
               }
             };
             that.setData({ malfunctionflag:malfunctionflag });
@@ -98,5 +114,16 @@ Page({
         //console.log("返回成功的数据:" + arr.data );// 这里是请求以后返回的所有信息，请求方法同上，把res改成arr就行了  
       },
     });
-  }
+  },
+  onPullDownRefresh: function(){
+    this.onLoad();
+    wx.showModal({
+      title: "提示",
+      content: "数据更新成功" ,
+    });
+  },
+  onHide: function(){
+    var that = this;
+    that.setData({ malfunctionflag:[] });
+  },
 });

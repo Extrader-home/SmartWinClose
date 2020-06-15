@@ -8,18 +8,20 @@
   speed="50"
   left-icon="warning"
 />
-<view style="font-family: 'ttf2';" wx:for="{{ arrfloor }}" wx:for-item="j" wx:key="arrfloor">
-<view wx:if="{{arrview[j] == -1}}"> 
-  <van-cell title="{{ j+1 }}楼 故障🚫" data-id="{{ j }}" is-link bind:click="showPopup" /> 
+<view style="font-family: 'ttf2';" wx:for="{{ arrfloor }}" wx:key="arrfloor">
+<view wx:if="{{arrview[item - 1] == -1}}"> 
+  <van-cell title="{{item}}楼 故障🚫" data-id="{{ item - 1 }}" is-link bind:click="showPopup" /> 
 </view>
-<view wx:elif="{{arrview[j] == 0}}">
-  <van-cell title="{{ j+1 }}楼 已关👌" data-id="{{ j }}" is-link bind:click="showPopup" /> 
+<view wx:elif="{{arrview[item - 1] == 0}}">
+  <van-cell title="{{item}}楼 已关👌" data-id="{{ item - 1 }}" is-link bind:click="showPopup" /> 
 </view>
-<view wx:elif="{{arrview[j] == 1}}">
-  <van-cell title="{{ j+1 }}楼 未关❌" data-id="{{ j }}" is-link bind:click="showPopup" />
+<view wx:elif="{{arrview[item - 1] == 1}}">
+  <van-cell title="{{item}}楼 未关❌" data-id="{{ item - 1 }}" is-link bind:click="showPopup" />
 </view>
-<view wx:else="{{arrview[j] == 2}}">
-  <van-cell title="{{ j+1 }}楼 故障🚫 未关❌" data-id="{{ j }}" is-link bind:click="showPopup" />
+<view wx:elif="{{arrview[item - 1] == 3}}">
+</view>
+<view wx:else="{{arrview[item - 1] == 2}}">
+  <van-cell title="{{item}}楼 故障🚫 未关❌" data-id="{{ item - 1 }}" is-link bind:click="showPopup" />
 </view>
 <!-- <van-cell title="{{ j+1 }}楼 未关❌" data-id="{{ j }}" is-link bind:click="showPopup" />  -->
   <!-- <van-popup show="{{ show }}" round position="center" custom-style="text-align: center;" bind:close="onClose" safe-area-inset-bottom="true" closeable="true"> -->

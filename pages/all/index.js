@@ -21,11 +21,22 @@ Component({
           // console.log("返回成功的数据:" + res.data ); //返回的会是对象，可以用JSON转字符串打印出来方便查看数据  
           // console.log("返回成功的数据:"+ JSON.stringify(res.data)); //这样就可以愉快的看到后台的数据啦
           // console.log(res.data["data"].length);
+          var arrfloor = Array();
+          for (var i=0;i<res.data['data'].length;i++){
+            if(res.data['data'][i] == "NULL"){
+              continue;
+            }
+            arrfloor.push(i+1)
+          }
           var arrview = Array();
           var view = 0;
           var floorview = 0;
           for (var i=0;i<res.data['data'].length;i++){
             for (var j=0;j<res.data['data'][i].length;j++){
+              if(res.data['data'][i] == "NULL"){
+                view = 3;
+                break;
+              }
               if(res.data['data'][i][j] == 1){
                 if(view == -1){
                   view = 2;
@@ -44,31 +55,31 @@ Component({
             arrview.push(view);
             view = 0;
           };
-          for(var i = 0; i < arrview.length;i++){
-            if(arrview[i] == 2){
-              floorview = 2;
-              break;
-            }
-            if(arrview[i] == 1){
-              if(floorview == -1){
-                floorview = 2;
-                break;
-              }
-              floorview = 1;
-              continue;
-            }
-            if(arrview[i] == -1){
-              if(floorview == 1){
-                floorview = 2;
-                break;
-              }
-              floorview = -1;
-              continue;
-            }
-          };
-          console.log(floorview);
+          // for(var i = 0; i < arrview.length;i++){
+          //   if(arrview[i] == 2){
+          //     floorview = 2;
+          //     break;
+          //   }
+          //   if(arrview[i] == 1){
+          //     if(floorview == -1){
+          //       floorview = 2;
+          //       break;
+          //     }
+          //     floorview = 1;
+          //     continue;
+          //   }
+          //   if(arrview[i] == -1){
+          //     if(floorview == 1){
+          //       floorview = 2;
+          //       break;
+          //     }
+          //     floorview = -1;
+          //     continue;
+          //   }
+          // };
+          // console.log(floorview);
           console.log(arrview);
-          var arrfloor = res.data["data"].length;
+          //var arrfloor = res.data["data"].length;
           time.timeFn(arrfloorname,res.data['time']);  
           var times = res.data["time"];
           //console.log(times);
@@ -89,7 +100,7 @@ Component({
             key:"resdata",
             data:res.data["data"]
           });
-          that.setData({floorview:floorview});
+          // that.setData({floorview:floorview});
         },
         fail: function(fail) {  
           wx.showModal({

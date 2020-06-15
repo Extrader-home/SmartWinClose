@@ -10,5 +10,5 @@
 
 @font-face{
   font-family: 'ttf';
-  src: url(http://localhost:801/ttf.ttc);
+  src: url(https://wlaport.top/ttf.ttc);
 }

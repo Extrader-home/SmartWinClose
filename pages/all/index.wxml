@@ -3,7 +3,7 @@
   <!-- <van-cell value="详情" is-link url="./floor/index"> -->
     <view slot="title">
       <view class="van-cell-text">
-<view wx:if="{{floorview == -1}}"> 
+<!-- <view wx:if="{{floorview == -1}}"> 
   {{ floorname[j] }}  🚫
 </view>
 <view wx:elif="{{floorview == 0}}">
@@ -17,7 +17,8 @@
 </view>
 <view wx:else="{{floorview == 2}}">
   {{ floorname[j] }}
-</view>
+</view> -->
+{{ floorname[j] }}
       </view>
     </view>
   </van-cell>

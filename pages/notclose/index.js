@@ -9,7 +9,7 @@ Page({
     });
     var that = this;
     var arrfloornames = e.currentTarget.dataset.names || 0;
-    var noclose = Array();
+    var noclosewin = Array();
     console.log(arrfloornames);
     wx.request({  
       url: 'https://wlaport.top/apitest.php?floor='+encodeURI(arrfloornames),  //这里''里面填写你的服务器API接口的路径  
@@ -20,15 +20,18 @@ Page({
         time.timeFn(arrfloornames,res.data['time']);  
         for (var i=0;i<res.data["data"].length;i++){
           for (var j=0;j<res.data["data"][i].length;j++){
+              if(res.data['data'][i] == "NULL"){
+                break;
+              }
               if(res.data["data"][i][j] == "1"){
                 res.data["data"][i][j] = (i+1)+"楼 -> "+(j+1)+"窗 -> 未关❌";
-                noclose.push(res.data["data"][i][j])
+                noclosewin.push(res.data["data"][i][j])
               }
           }
         }
-        console.log(noclose);
+        console.log(noclosewin);
         //console.log(res.data["data"]);
-        that.setData({ noclosewin:noclose, arrnoclosewin:noclose.length })
+        that.setData({ noclosewin:noclosewin, arrnoclosewin:noclosewin.length })
       },
       fail: function(fail) {  
         wx.showModal({
@@ -49,31 +52,44 @@ Page({
   },
   onLoad: function(){
     var that = this;
+    var nocloseflag = [];
     wx.request({
       url: 'https://wlaport.top/apitest.php?floor=1',
       methods: 'GET',
       success: function(res){
-        console.log(encodeURI(res.data["floor"]));
-        that.setData({ floorname:res.data["floor"],arrfloorname:res.data["floor"].length });
+        //console.log(encodeURI(res.data["floor"]));
         //console.log(res.data["floor"]);
         for(var k = 0;k < res.data["floor"].length;k++){
+        //console.log(res.data["floor"][k]);
         wx.request({  
           url: 'https://wlaport.top/apitest.php?floor='+encodeURI(res.data["floor"][k]),  //这里''里面填写你的服务器API接口的路径  
           data: {},  //这里是可以填写服务器需要的参数  
           method: 'GET', // 声明GET请求  
           // header: {}, // 设置请求的 header，GET请求可以不填  
           success: function(res1){  
-            var noclose = 0,malfunction = 0;
+            var flag = 0;
             for (var i=0;i<res1.data['data'].length;i++){
               for (var j=0;j<res1.data['data'][i].length;j++){
-                if(res1.data['data'][i][j] == 1){
-                  noclose = 1;
+                if(res1.data['data'][i] === "NULL"){
+                  break;
+                }
+                if(res1.data['data'][i][j] === "1"){
+                  flag = 1;
+                  break;
                 }
               }
+              if(flag === 1){
+                nocloseflag.push(1);
+                break;
+              }
+              if(i == res1.data['data'].length-1 && flag === 0){
+                nocloseflag.push(0);
+                break;
+              }
             };
-            console.log(noclose);
-            //console.log(malfunction);
-            that.setData({ noclose:noclose });
+            console.log(nocloseflag);
+            
+            that.setData({ nocloseflag:nocloseflag });
           },
           fail: function(fail1) {  
             wx.showModal({
@@ -87,7 +103,7 @@ Page({
           
         })  
         }
-        
+        that.setData({ floorname:res.data["floor"],arrfloorname:res.data["floor"].length });
       },
       fail: function(fail) {  
         wx.showModal({
@@ -99,5 +115,16 @@ Page({
         //console.log("返回成功的数据:" + arr.data );// 这里是请求以后返回的所有信息，请求方法同上，把res改成arr就行了  
       },
     });
-  }
+  },
+  onPullDownRefresh: function(){
+    this.onLoad();
+    wx.showModal({
+      title: "提示",
+      content: "数据更新成功" ,
+    });
+  },
+  onHide: function(){
+    var that = this;
+    that.setData({ nocloseflag:[] });
+  },
 });
