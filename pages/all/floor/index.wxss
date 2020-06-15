@@ -1,0 +1,19 @@
+@import '../../style/txt.wxss';
+
+.btn1 {
+  width: 80%;
+  /* margin-top: 10rpx; */
+  background-color: rgb(190, 150, 16);
+  color: white;
+  border-radius: 98rpx;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  font-size: small;
+  border: 0; 
+}
+
+.apitime {
+  color: rgb(241, 101, 7);
+}

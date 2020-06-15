@@ -1,0 +1,14 @@
+
+<view style="font-family: 'ttf2';" wx:for="{{ arrfloorname }}" wx:for-item="j" wx:key="arrfloorname">
+  <van-collapse accordion value="{{ activeNames }}" bind:open="onChange" bind:close="onClose" data-names="{{ floorname[j] }}">
+    <van-collapse-item name="{{ j }}">
+      <view slot="title">
+        {{ floorname[j] }}
+          <van-tag wx:if="{{noclose == 1}}" round type="danger">有未关窗</van-tag>
+      </view>
+      <view class="txt" style="font-family: 'ttf';" wx:for="{{ arrnoclosewin }}" wx:for-item="i" style="font-size:16px" wx:key="arrnoclosewin">
+        {{ noclosewin[i] }}
+      </view>
+    </van-collapse-item>
+  </van-collapse>
+</view>

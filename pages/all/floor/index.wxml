@@ -1,0 +1,40 @@
+<van-notice-bar
+  text="当前窗户系统时间：{{ times }}"
+  speed="50"
+  left-icon="volume-o"
+/>
+<van-notice-bar
+  text="请刷新页面获取最新状态！！！"
+  speed="50"
+  left-icon="warning"
+/>
+<view style="font-family: 'ttf2';" wx:for="{{ arrfloor }}" wx:for-item="j" wx:key="arrfloor">
+<view wx:if="{{arrview[j] == -1}}"> 
+  <van-cell title="{{ j+1 }}楼 故障🚫" data-id="{{ j }}" is-link bind:click="showPopup" /> 
+</view>
+<view wx:elif="{{arrview[j] == 0}}">
+  <van-cell title="{{ j+1 }}楼 已关👌" data-id="{{ j }}" is-link bind:click="showPopup" /> 
+</view>
+<view wx:elif="{{arrview[j] == 1}}">
+  <van-cell title="{{ j+1 }}楼 未关❌" data-id="{{ j }}" is-link bind:click="showPopup" />
+</view>
+<view wx:else="{{arrview[j] == 2}}">
+  <van-cell title="{{ j+1 }}楼 故障🚫 未关❌" data-id="{{ j }}" is-link bind:click="showPopup" />
+</view>
+<!-- <van-cell title="{{ j+1 }}楼 未关❌" data-id="{{ j }}" is-link bind:click="showPopup" />  -->
+  <!-- <van-popup show="{{ show }}" round position="center" custom-style="text-align: center;" bind:close="onClose" safe-area-inset-bottom="true" closeable="true"> -->
+  <van-dialog
+  use-slot
+  title="详情"
+  show="{{ show }}"
+  show-cancel-button
+  confirm-button-open-type="getUserInfo"
+  bind:close="onClose"
+  bind:getuserinfo="getUserInfo"
+  >
+    <view class="txt" wx:for="{{ arrwindows }}" wx:for-item="i" style="font-size:16px" wx:key="arrwindows">
+    {{ windows[i] }}
+    </view>
+  <!-- </van-popup> -->
+  </van-dialog>
+</view>

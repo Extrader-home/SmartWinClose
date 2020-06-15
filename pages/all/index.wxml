@@ -1,0 +1,24 @@
+<view style="font-family: 'ttf2';" wx:for="{{ arrfloorname }}" wx:for-item="j" wx:key="arrfloorname">
+  <van-cell value="详情" is-link url="./floor/index" bind:click="getfloor" data-name="{{ floorname[j] }}">
+  <!-- <van-cell value="详情" is-link url="./floor/index"> -->
+    <view slot="title">
+      <view class="van-cell-text">
+<view wx:if="{{floorview == -1}}"> 
+  {{ floorname[j] }}  🚫
+</view>
+<view wx:elif="{{floorview == 0}}">
+  {{ floorname[j] }}  👌
+</view>
+<view wx:elif="{{floorview == 1}}">
+  {{ floorname[j] }}  ❌
+</view>
+<view wx:elif="{{floorview == 2}}">
+  {{ floorname[j] }}  🚫❌
+</view>
+<view wx:else="{{floorview == 2}}">
+  {{ floorname[j] }}
+</view>
+      </view>
+    </view>
+  </van-cell>
+</view>
