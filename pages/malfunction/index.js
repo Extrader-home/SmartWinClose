@@ -84,7 +84,7 @@ Page({
                 malfunctionflag.push(1);
                 break;
               }
-              if(i == res1.data['data'].length-1 && flag === 0){
+              if(i === res1.data['data'].length-1 && flag === 0){
                 malfunctionflag.push(0);
                 break;
               }

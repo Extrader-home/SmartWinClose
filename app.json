@@ -11,7 +11,6 @@
     "enablePullDownRefresh": true
   },
   "usingComponents": {
-    "demo-block": "./block/index",
     "van-action-sheet": "./dist/action-sheet/index",
     "van-area": "./dist/area/index",
     "van-button": "./dist/button/index",

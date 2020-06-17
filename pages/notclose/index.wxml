@@ -13,6 +13,7 @@
       </view>
       <view class="txt" style="font-family: 'ttf';" wx:for="{{ arrnoclosewin }}" wx:for-item="i" style="font-size:16px" wx:key="arrnoclosewin">
         {{ noclosewin[i] }}
+        <view wx:if="{{ nocloseflag == [] }}">改楼栋无未关窗</view>
       </view>
     </van-collapse-item>
   </van-collapse>
