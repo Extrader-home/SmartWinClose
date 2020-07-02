@@ -1,0 +1,49 @@
+<view class="demo-home">
+  <view class="demo-home__title">
+    <image mode="aspectFit" class="demo-home__image" src="../../img/ico.png" />
+    <view class="demo-home__text">智能引导关窗系统</view>
+  </view>
+  <view class="demo-home__desc">
+    随时随地查看您的窗户情况
+  </view>
+  <view
+    wx:for="{{ list }}"
+    wx:for-item="group"
+    wx:key="index"
+  >
+    <!-- <demo-home-nav group="{{ group }}" /> -->
+
+    <view class="demo-home-nav">
+      <view class="demo-home-nav__title">{{ group.groupName }}</view>
+      <view class="demo-home-nav__group">
+        <view
+          wx:for="{{ group.list }}"
+          wx:key="title"
+          class="demo-home-nav__block"
+          data-url="/pages{{ item.path }}/index"
+          bind:tap="onClick"
+        >
+          <view wx:if="{{item.num == 1}}">
+            {{ item.title }}<van-tag wx:if="{{noclose == 1}}" round type="danger" size="medium">有未关窗</van-tag>
+          </view>
+
+          <view wx:elif="{{item.num == 2}}">
+            {{ item.title }}<van-tag wx:if="{{malfunction == 1}}" round type="danger" size="medium">有故障窗</van-tag>
+          </view>
+
+          <view wx:else="{{item.num == 3}}">
+            {{ item.title }}
+          </view>
+
+          <van-icon name="arrow" custom-class="demo-home-nav__icon" />
+          <!-- <van-tag mark type="danger" size="medium">标签</van-tag> -->
+        </view>
+      </view>
+    </view>
+      <view class="tui-menu-list">
+        <text>是否开启报警：{{isChecked3}}</text>
+        <van-switch class="tui-fr" checked="{{ checked }}" size="24px" bind:change="SwitchChange" active-value="Y" inactive-value="N"/>
+      </view>
+      <!-- <button bindtap="getOpenid">获取用户的openid并推送消息</button> -->
+  </view>
+</view>

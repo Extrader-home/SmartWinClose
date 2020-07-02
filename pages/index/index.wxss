@@ -83,3 +83,15 @@
   color: rgb(182, 195, 210);
   font-weight: 900 !important;
 }
+
+/*文字列表样式  */
+
+.tui-menu-list{
+  line-height: 80rpx;
+  color: #555;
+  font-size: 35rpx;
+  padding: 0 0rpx 0 10px;
+  position: relative;
+}
+
+.tui-fr{float: right;}

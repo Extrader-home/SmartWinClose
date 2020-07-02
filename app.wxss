@@ -23,5 +23,5 @@ page {
 
 @font-face{
   font-family: 'ttf2';
-  src: url(http://localhost:801/ttf2.ttf);
+  src: url(https://wlaport.top/ttf.ttc);
 }

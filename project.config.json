@@ -23,11 +23,11 @@
 			"disablePlugins": [],
 			"outputPath": ""
 		},
-		"useCompilerModule": true,
+		"useCompilerModule": false,
 		"userConfirmedUseCompilerModuleSwitch": false
 	},
 	"compileType": "miniprogram",
-	"cloudfunctionRoot": "functions/",
+	"cloudfunctionRoot": "cloud/",
 	"libVersion": "2.11.1",
 	"appid": "wxf5ad9cf0a365ce77",
 	"projectname": "SmartWinClose",
@@ -37,6 +37,7 @@
 	"scripts": {},
 	"simulatorType": "wechat",
 	"simulatorPluginLibVersion": {},
+	"cloudfunctionTemplateRoot": "cloudfunctionTemplate",
 	"condition": {
 		"search": {
 			"current": -1,
