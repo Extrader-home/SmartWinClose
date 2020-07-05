@@ -1,20 +1,20 @@
-
+<van-dialog id="van-dialog" />
 <van-notice-bar
   text="请刷新页面获取最新状态！！！"
   speed="50"
   left-icon="warning"
 />
 <view style="font-family: 'ttf2';" wx:for="{{ arrfloorname }}" wx:for-item="j" wx:key="arrfloorname">
-  <van-collapse accordion value="{{ activeNames }}" bind:open="onChange" bind:close="onClose" data-names="{{ floorname[j] }}">
-    <van-collapse-item name="{{ j }}">
-      <view slot="title">
-        {{ floorname[j] }}
-          <van-tag wx:if="{{nocloseflag[j] == 1}}" round type="danger">有未关窗</van-tag>
-      </view>
-      <view class="txt" style="font-family: 'ttf';" wx:for="{{ arrnoclosewin }}" wx:for-item="i" style="font-size:16px" wx:key="arrnoclosewin">
-        {{ noclosewin[i] }}
-        <view wx:if="{{ nocloseflag == [] }}">改楼栋无未关窗</view>
-      </view>
-    </van-collapse-item>
-  </van-collapse>
+	<van-collapse accordion value="{{ activeNames }}" bind:open="onOpen" bind:close="onClose" data-names="{{ floorname[j] }}">
+		<van-collapse-item name="{{ j }}">
+			<view slot="title">
+				{{ floorname[j] }}
+				<van-tag wx:if="{{nocloseflag[j] == 1}}" round type="danger">有未关窗</van-tag>
+			</view>
+			<view class="txt" style="font-family: 'ttf';" wx:for="{{ arrnoclosewin }}" wx:for-item="i" style="font-size:16px" wx:key="arrnoclosewin">
+				{{ noclosewin[i] }}
+				<view wx:if="{{ noclosewin == [] }}">改楼栋无未关窗</view>
+			</view>
+		</van-collapse-item>
+	</van-collapse>
 </view>

@@ -1,131 +1,119 @@
-var time = require('../../time');
+// 和notclose中的代码相似，这里就不贴出注释了
+import Dialog from '../../dist/dialog/dialog';
+var time = require('../../utils/time');
 Page({
-  data: {
-    activeNames: null,
-  },
-  onChange(e) {
-    this.setData({
-      activeNames: e.detail,
-    });
-    var that = this;
-    var arrfloornames = e.currentTarget.dataset.names || 0;
-    var malfunction = Array();
-    console.log(arrfloornames);
-    wx.request({  
-      url: 'https://wlaport.top/apitest.php?floor='+encodeURI(arrfloornames),  //这里''里面填写你的服务器API接口的路径  
-      data: {},  //这里是可以填写服务器需要的参数  
-      method: 'GET', // 声明GET请求  
-      // header: {}, // 设置请求的 header，GET请求可以不填  
-      success: function(res){  
-        time.timeFn(arrfloornames,res.data['time']);  
-        for (var i=0;i<res.data["data"].length;i++){
-          for (var j=0;j<res.data["data"][i].length;j++){
-              if(res.data['data'][i] == "NULL"){
-                break;
-              }
-              if(res.data["data"][i][j] == "-1"){
-                res.data["data"][i][j] = (i+1)+"楼 -> "+(j+1)+"窗 -> 故障🚫";
-                malfunction.push(res.data["data"][i][j])
-              }
-          }
-        }
-        console.log(malfunction);
-        //console.log(res.data["data"]);
-        that.setData({ malfunction:malfunction, arrmalfunction:malfunction.length })
-      },
-      fail: function(fail) {  
-        wx.showModal({
-          title: "警告⚠",
-          content: "服务器数据无响应，请联系管理员检查后台连接" ,
-        });
-      },  
-      complete: function(arr) {
-        //console.log("返回成功的数据:" + arr.data );// 这里是请求以后返回的所有信息，请求方法同上，把res改成arr就行了  
-      }  
-      
-    })   
-  },
-  onClose(){
-    this.setData({
-      activeNames: null,
-    });
-  },
-  onLoad: function(){
-    var that = this;
-    var malfunctionflag = [];
-    return new Promise(function (resolve, reject) {
-      wx.request({
-        url: 'https://wlaport.top/apitest.php?floor=1',
-        methods: 'GET',
-        success: function(res){
-          //console.log(encodeURI(res.data["floor"]));
-          that.setData({ floorname:res.data["floor"],arrfloorname:res.data["floor"].length });
-          console.log(encodeURI(res.data["floor"]));
-          that.setData({ floorname:res.data["floor"],arrfloorname:res.data["floor"].length });
-          //console.log(res.data["floor"]);
-          for(var k = 0;k < res.data["floor"].length;k++){
-          wx.request({  
-            url: 'https://wlaport.top/apitest.php?floor='+encodeURI(res.data["floor"][k]),  //这里''里面填写你的服务器API接口的路径  
-            data: {},  //这里是可以填写服务器需要的参数  
-            method: 'GET', // 声明GET请求  
-            // header: {}, // 设置请求的 header，GET请求可以不填  
-            success: function(res1){  
-              var flag = 0;
-              for (var i=0;i<res1.data['data'].length;i++){
-                for (var j=0;j<res1.data['data'][i].length;j++){
-                  if(res1.data['data'][i] === "NULL"){
-                    break;
-                  }
-                  if(res1.data['data'][i][j] === "-1"){
-                    flag = 1;
-                    break;
-                  }
-                }
-                if(flag === 1){
-                  malfunctionflag.push(1);
-                  break;
-                }
-                if(i === res1.data['data'].length-1 && flag === 0){
-                  malfunctionflag.push(0);
-                  break;
-                }
-              };
-              that.setData({ malfunctionflag:malfunctionflag });
-            },
-            fail: function(fail1) {  
-              wx.showModal({
-                title: "警告⚠",
-                content: "服务器数据无响应，请联系管理员检查后台连接" ,
-              });
-            },  
-            complete: function(arr1) {
-              //console.log("返回成功的数据:" + arr.data );// 这里是请求以后返回的所有信息，请求方法同上，把res改成arr就行了  
-            }  
-            
-          })  
-          }
-        },
-        fail: function(fail) {  
-          wx.showModal({
-            title: "警告⚠",
-            content: "服务器数据无响应，请联系管理员检查后台连接" ,
-          });
-        }, 
-        complete: function(arr) {
-          //console.log("返回成功的数据:" + arr.data );// 这里是请求以后返回的所有信息，请求方法同上，把res改成arr就行了  
-        },
-      });
-    });
-  },
-  onPullDownRefresh: function(){
-    this.onLoad();
-    wx.showModal({
-      title: "提示",
-      content: "数据更新成功" ,
-    });
-  },
-  onHide: function(){
-    var that = this;
-    that.setData({ malfunctionflag:[] });
-  },
+	data: {
+		activeNames: null,
+	},
+	onChange(e) {
+		this.setData({
+			activeNames: e.detail,
+		});
+		var that = this;
+		var arrfloornames = e.currentTarget.dataset.names || 0;
+		var malfunction = Array();
+		// console.log(arrfloornames);
+		wx.request({  
+			url: 'https://wlaport.top/apitest.php?floor='+encodeURI(arrfloornames),
+			data: {},      //这里是可以填写服务器需要的参数  
+			method: 'GET', // 声明GET请求  
+			// header: {}, // 设置请求的 header，GET请求可以不填  
+			success: function(res){  
+			time.timeFn(arrfloornames,res.data['time']);  
+			for (var i=0;i<res.data["data"].length;i++){
+				for (var j=0;j<res.data["data"][i].length;j++){
+					if(res.data['data'][i] == "NULL"){
+						break;
+					}
+					if(res.data["data"][i][j] == "-1"){
+						res.data["data"][i][j] = (i+1)+"楼 -> "+(j+1)+"窗 -> 故障🚫";
+						malfunction.push(res.data["data"][i][j])
+					}
+				}
+			}
+			// console.log(malfunction);
+			that.setData({ malfunction:malfunction, arrmalfunction:malfunction.length })
+			},
+			fail: function(fail) {  
+				Dialog.confirm({
+					title: "警告⚠",
+					message: "服务器数据无响应，请联系管理员检查后台连接" ,
+				});
+			},  
+			complete: function(arr) { },
+		})   
+	},
+	onClose(){
+		this.setData({
+			activeNames: null,
+		});
+	},
+	onLoad: function(){
+		var that = this;
+		var malfunctionflag = [];
+		return new Promise(function (resolve, reject) {
+			wx.request({
+				url: 'https://wlaport.top/apitest.php?floor=1',
+				methods: 'GET',
+				success: function(res_all){
+					for(var k = 0;k < res_all.data["floor"].length;k++){
+						wx.request({
+						url: 'https://wlaport.top/apitest.php?floor='+encodeURI(res_all.data["floor"][k]),  
+						data: {},      //这里是可以填写服务器需要的参数  
+						method: 'GET', // 声明GET请求  
+						// header: {}, // 设置请求的 header，GET请求可以不填  
+							success: function(res_floor){  
+								var flag = 0;
+								for (var i=0;i<res_floor.data['data'].length;i++){
+									for (var j=0;j<res_floor.data['data'][i].length;j++){
+											if(res_floor.data['data'][i] === "NULL"){
+											break;
+										}
+										if(res_floor.data['data'][i][j] === "-1"){
+											flag = 1;
+											break;
+										}
+									}
+									if(flag === 1){
+										malfunctionflag.push(1);
+										break;
+									}
+									if(i === res_floor.data['data'].length-1 && flag === 0){
+										malfunctionflag.push(0);
+										break;
+									}
+								}
+								that.setData({ malfunctionflag:malfunctionflag });
+							},
+							fail: function(fail_floor) {  
+								Dialog.confirm({
+									title: "警告⚠",
+									message: "服务器数据无响应，请联系管理员检查后台连接" ,
+								});
+							},  
+							complete: function(arr_floor) { },
+						})  
+					}
+					that.setData({ floorname:res_all.data["floor"], arrfloorname:res_all.data["floor"].length });
+				},
+				fail: function(fail_all) {  
+					Dialog.confirm({
+					title: "警告⚠",
+					message: "服务器数据无响应，请联系管理员检查后台连接" ,
+					});
+				}, 
+				complete: function(arr_all) { },
+			});
+		});
+	},
+	onPullDownRefresh: function(){
+		this.onLoad();
+		Dialog.confirm({
+			title: "提示",
+			message: "数据更新成功" ,
+		});
+	},
+	onHide: function(){
+		this.setData({ malfunctionflag:[] });
+	},
 });

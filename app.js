@@ -1,12 +1,11 @@
 //app.js
 App({
   globalData:{
-    kg:"",
   },
-  onLaunch: function(){
+  onLaunch: function(){  // 监听小程序初始化
     wx.cloud.init({
       env: 'smartwinclose',
       traceUser: true,
-  })
+    });
   },
 })

@@ -1,0 +1,40 @@
+<van-dialog id="van-dialog" />
+<van-notice-bar
+	text="登录成功即可使用所有功能"
+	speed="50"
+	left-icon="volume-o"
+/>
+<view class="demo-home">
+	<view class="demo-home__title">
+		<image mode="aspectFit" class="demo-home__image" src="../../img/ico.png" />
+		<view class="demo-home__text">智能引导关窗系统</view>
+	</view>
+	<view class="demo-home__desc">
+		随时随地查看您的窗户情况
+	</view>
+	<form bindsubmit="login">
+		<!--账号-->
+		<van-cell-group>
+			<van-field
+				name="username"
+				label="账号"
+				placeholder="请输入账号"
+				border="{{ false }}"
+			/>
+		</van-cell-group>
+		<!--密码-->
+		<van-cell-group>
+			<van-field
+				name="password"
+				label="密码"
+				placeholder="请输入密码"
+				border="{{ false }}"
+			/>
+		</van-cell-group>
+		<!--按钮-->
+		<van-button round form-type="submit" open-type="login" bindgetuserinfo="login" type="primary" block>登录</van-button>
+		<van-button round type="primary" size="small" color="linear-gradient(to right, #4bb0ff, #6149f6)" open-type="openSetting">
+		进入授权页面
+		</van-button>
+	</form>
+</view> 

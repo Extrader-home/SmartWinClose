@@ -1,173 +1,245 @@
 import list from '../../config';
+import Dialog from '../../dist/dialog/dialog';
 const app = getApp();
 Page({
-  data: {
-    list,
-    intervalId: "",
-    checked: app.globalData.kg,
-  },
-  //获取用户的openid
-  getOpenid() {
-    wx.cloud.callFunction({
-      name: "getopenid",
-    }).then(res => {
-      let openid = res.result.openid;
-      let caveattime= "2020/06/18 22:11:29";
-      console.log("获取openid成功", openid,"获取时间成功", caveattime);
-      // this.send(openid,caveattime);
-      wx.request({
-        url: 'http://127.0.0.1:5000/index?openid='+openid,  //这里''里面填写你的服务器API接口的路径  
-        data: {},  //这里是可以填写服务器需要的参数  
-        method: 'GET', // 声明GET请求  
-        // header: {}, // 设置请求的 header，GET请求可以不填  
-        success: function(res){  
-        },
-        fail: function(fail) {  
-          wx.showModal({
-            title: "警告⚠",
-            content: "服务器数据无响应，请联系管理员检查后台连接" ,
-          });
-        },  
-        complete: function(arr) {
-          //console.log("返回成功的数据:" + arr.data );// 这里是请求以后返回的所有信息，请求方法同上，把res改成arr就行了  
-        }  
-      })  
-    }).catch(res => {
-      console.log("获取openid失败", res);
-    })
-  },
-  // //发送模板消息到指定用户,推送之前要先获取用户的openid
-  // send(openid,caveattime) {
-  //   wx.cloud.callFunction({
-  //     name: "app",
-  //     data: {
-  //       openid: openid,
-  //       time: caveattime,
-  //     }
-  //   }).then(res => {
-  //     console.log("推送消息成功", res);
-  //     console.log(time);
-  //   }).catch(res => {
-  //     console.log("推送消息失败", res)
-  //   })
-  // },
-  onClick(event) {
-    wx.navigateTo({
-      url: event.target.dataset.url
-    });
-    this.setData({ nocloseflag:[],malfunctionflag:[] });
-  },
-  SwitchChange({ detail }){
-    let fs = wx.getFileSystemManager()
-    console.log(detail)
-    if(detail == "Y"){
-      wx.showModal({
-        title: '提示',
-        content: '是否开启报警？',
-        success: (res) => {
-          if (res.confirm) {
-            this.setData({ checked: detail });
-            this.getOpenid();
-            wx.requestSubscribeMessage({
-              tmplIds: ['rAGivRB2e62iTigvoHj2vkamvR_0RxCViytS1IolHOo'],  //这里填入我们生成的模板id
-              success (res) {
-                
-                console.log('授权成功',res);
-               },
-               fail(res){
-                console.log('授权失败',res);
-               }
-            })
-          }
-        },
-      });
-    }else{
-      wx.showModal({
-        title: '提示',
-        content: '是否关闭报警？',
-        success: (res) => {
-          if (res.confirm) {
-            this.setData({ checked: detail });
-          }
-        },
-      });
-    }
-  },
-  subscription(key){
-    if(key == "Y"){
-
-    }else{
-
-    }
-  },
-  onLoad: function (){
-    var that = this;
-    return new Promise(function (resolve, reject) {
-      wx.request({
-        url: 'https://wlaport.top/apitest.php?floor=1',
-        methods: 'GET',
-        success: function(res){
-          //console.log(res.data["floor"]);
-          for(var k = 0;k < res.data["floor"].length;k++){
-          wx.request({
-            url: 'https://wlaport.top/apitest.php?floor='+encodeURI(res.data["floor"][k]),  //这里''里面填写你的服务器API接口的路径  
-            data: {},  //这里是可以填写服务器需要的参数  
-            method: 'GET', // 声明GET请求  
-            // header: {}, // 设置请求的 header，GET请求可以不填  
-            success: function(res1){  
-              var noclose = 0,malfunction = 0;
-              for (var i=0;i<res1.data['data'].length;i++){
-                for (var j=0;j<res1.data['data'][i].length;j++){
-                  if(res1.data['data'][i][j] === "1"){
-                    noclose = 1;
-                  }
-                  if(res1.data['data'][i][j] === "-1"){
-                    malfunction = 1;
-                  }
-                }
-              };
-              //console.log(noclose);
-              //console.log(malfunction);
-              that.setData({ noclose:noclose,malfunction:malfunction });
-            },
-            fail: function(fail1) {  
-              wx.showModal({
-                title: "警告⚠",
-                content: "服务器数据无响应，请联系管理员检查后台连接" ,
-              });
-            },  
-            complete: function(arr1) {
-              //console.log("返回成功的数据:" + arr.data );// 这里是请求以后返回的所有信息，请求方法同上，把res改成arr就行了  
-            }  
-            
-          })  
-          }
-        },
-        fail: function(fail) {  
-          wx.showModal({
-            title: "警告⚠",
-            content: "服务器数据无响应，请联系管理员检查后台连接" ,
-          });
-        }, 
-        complete: function(arr) {
-          //console.log("返回成功的数据:" + arr.data );// 这里是请求以后返回的所有信息，请求方法同上，把res改成arr就行了  
-        },
-      });
-    })
-  },
-  onReady(){
-    var that = this;
-    that.setData({ intervalId:setInterval(that.onLoad,10000) });
-  },
-  onPullDownRefresh: function(){
-    this.onLoad();
-    wx.showModal({
-      title: "提示",
-      content: "数据更新成功" ,
-    });
-  },
-  onUnload: function(){
-    clearInterval(this.data.intervalId);
-    this.data.intervalId = "";
-  },
+	data: {
+		list,
+		intervalId: "",
+		checked: "N",
+		// token为登录判断，2 为加载，1为登录成功，0 Wie登录失败则可点击按键跳转到登录页面
+		token:2
+	},
+	//goto登录界面
+	gotologin(){
+		wx.reLaunch({
+			url: '/pages/login/index',
+		});
+	},
+	// 判断该用户是否有开启报警功能
+	AlarmStatus(openid) {
+		var that = this;
+		wx.request({
+			url: 'http://47.106.160.176:8888/?openid='+openid,
+			data: { },     //这里是可以填写服务器需要的参数  
+			method: 'GET', // 声明GET请求  
+			header: {
+				'content-type': 'application/x-www-form-urlencoded'
+			}, // 设置请求的 header，GET请求可以不填  
+			success: function(res){  
+			// console.log(res.data);
+				if(res.data == "Y"){
+					that.setData({ checked:"Y" });
+				}else if(res.data == "N"){
+					that.setData({ checked:"N" });
+				}
+			},
+			fail: function(fail) {  
+				Dialog.confirm({
+					title: "警告⚠",
+					message: "服务器数据无响应，请联系管理员检查后台连接" ,
+				});
+			},  
+			complete: function(arr) { },
+		})  
+	},
+	//获取用户的openid,并判断是否在数据库中存在,存在则跳转到index，不存在则跳转到登录页面
+	getOpenid() {
+		var that = this;
+		wx.cloud.callFunction({
+			name: "getopenid",
+		}).then(res => {
+			let openid = res.result.openid;
+			console.log("获取openid成功", openid);
+			// this.send(openid,caveattime);
+			return new Promise(function (resolve, reject) {
+				wx.request({
+					url: 'https://wlaport.top/login.php?mode=0',
+					data: {
+						openid: openid
+					},  //这里是可以填写服务器需要的参数  
+					method: 'POST', // 声明POTS请求  
+					header: {
+						'content-type': 'application/x-www-form-urlencoded'
+					}, // 设置请求的 header，GET请求可以不填  
+					success: function(res){  
+						// console.log(res.data);
+						if(res.data == "0"){
+							that.setData({ token:0 });
+						}else if(res.data == "1"){
+							that.setData({ token:1 });
+						}
+						that.AlarmStatus(openid)
+					},
+					fail: function(fail) {  
+						Dialog.confirm({
+							title: "警告⚠",
+							message: "服务器数据无响应，请联系管理员检查后台连接" ,
+						});
+					},  
+					complete: function(arr) { },
+				})  
+			});
+		}).catch(res => {
+			console.log("获取openid失败", res);
+		})
+	},
+	// 点击触发
+	onClick(event) {
+		wx.navigateTo({
+			url: event.target.dataset.url
+		});
+	},
+	// 开启报警功能
+	StartAlarm(){
+		wx.cloud.callFunction({
+			name: "getopenid",
+		}).then(res => {
+			let openid = res.result.openid;
+			console.log("获取openid成功", openid);
+			wx.request({
+				url: 'http://47.106.160.176:8888/index?floor=all&openid='+openid,
+				data: {},  //这里是可以填写服务器需要的参数  
+				method: 'GET', // 声明GET请求  
+				// header: {}, // 设置请求的 header，GET请求可以不填  
+				success: function(res){  
+					Dialog.confirm({
+						title: "提醒",
+						message: "报警功能开启成功！！！" ,
+					});
+				},
+				fail: function(fail) {  
+					Dialog.confirm({
+						title: "警告⚠",
+						message: "服务器数据无响应，请联系管理员检查后台连接" ,
+					});
+				},  
+				complete: function(arr) { },
+			})
+		}).catch(res => {
+			console.log("获取openid失败", res);
+		})
+	},
+	// 关闭报警功能
+	CloseAlarm(){
+		wx.cloud.callFunction({
+			name: "getopenid",
+		}).then(res => {
+			let openid = res.result.openid;
+			console.log("获取openid成功", openid);
+				wx.request({
+				url: 'http://47.106.160.176:8888/Alarm?alarm=N&openid='+openid,
+				data: {},      //这里是可以填写服务器需要的参数  
+				method: 'GET', // 声明GET请求  
+				// header: {}, // 设置请求的 header，GET请求可以不填  
+				success: function(res){  
+					Dialog.confirm({
+					title: "提醒",
+					message: "报警功能关闭成功！！！" ,
+					});
+				},
+				fail: function(fail) {  
+					Dialog.confirm({
+					title: "警告⚠",
+					message: "服务器数据无响应，请联系管理员检查后台连接" ,
+					});
+				},  
+				complete: function(arr) { },
+			})
+		}).catch(res => {
+			console.log("获取openid失败", res);
+		})
+	},
+	// 点击开关触发，开启报警还是关闭报警
+	SwitchChange({ detail }){
+		var that = this;
+		if(detail == "Y"){
+			wx.showModal({
+				title: '提示',
+				content: '是否开启报警？',
+				success: (res) => {
+					if (res.confirm) {
+						this.setData({ checked: detail });
+						wx.requestSubscribeMessage({
+							tmplIds: ['rAGivRB2e62iTigvoHj2vkamvR_0RxCViytS1IolHOo'],  //这里填入我们生成的模板id
+							success (res) {
+								console.log('授权成功',res);
+								that.StartAlarm();
+							},
+							fail(res){
+								console.log('授权失败',res);
+							},
+						})
+					}
+				},
+			});
+		}else{
+			wx.showModal({
+				title: '提示',
+				content: '是否关闭报警？',
+				success: (res) => {
+					if (res.confirm) {
+						this.setData({ checked: detail });
+						that.CloseAlarm()
+					}
+				},
+			});
+		}
+	},
+	// 先判断是否有登录，在判断时候显示未关和故障标签
+	onLoad: function (){
+		this.getOpenid();
+		var that = this;
+		return new Promise(function (resolve, reject) {
+			wx.request({
+				url: 'https://wlaport.top/apitest.php?floor=1',
+				methods: 'GET',
+				success: function(res_all){
+					//console.log(res.data["floor"]);
+					for(var k = 0;k < res_all.data["floor"].length;k++){
+						wx.request({
+							url: 'https://wlaport.top/apitest.php?floor='+encodeURI(res_all.data["floor"][k]),
+							data: {},      //这里是可以填写服务器需要的参数  
+							method: 'GET', // 声明GET请求  
+							// header: {}, // 设置请求的 header，GET请求可以不填  
+							success: function(res_floor){  
+								var noclose = 0,malfunction = 0;
+								for (var i=0;i<res_floor.data['data'].length;i++){
+									for (var j=0;j<res_floor.data['data'][i].length;j++){
+										if(res_floor.data['data'][i][j] === "1"){
+											noclose = 1;
+										}
+										if(res_floor.data['data'][i][j] === "-1"){
+											malfunction = 1;
+										}
+									}
+								};
+								that.setData({ noclose:noclose,malfunction:malfunction });
+							},
+							fail: function(fail_floor) {  
+								Dialog.confirm({
+									title: "警告⚠",
+									message: "服务器数据无响应，请联系管理员检查后台连接" ,
+								});
+							},  
+							complete: function(arr_floor) { },
+						})  
+					}
+				},
+				fail: function(fail_all) {  
+					Dialog.confirm({
+					title: "警告⚠",
+					message: "服务器数据无响应，请联系管理员检查后台连接" ,
+					});
+				}, 
+				complete: function(arr_all) { },
+			});
+		})
+	},
+	onPullDownRefresh: function(){
+		this.onLoad();
+		Dialog.confirm({
+			title: "提示",
+			message: "数据更新成功" ,
+		});
+	},
 });
